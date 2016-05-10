@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.ssm.dao.DashBoardMapper" >
+
+  <resultMap id="BaseResultMap" type="org.ssm.model.DashBoardDataOne" >
+    <result column="HOUR" property="hour" jdbcType="VARCHAR" />
+    <result column="IN_SUM" property="inSum" jdbcType="INTEGER" />
+    <result column="OUT_SUM" property="outSum" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    HOUR, IN_SUM, OUT_SUM
+  </sql>
+  
+  <select id="selectInAndOutSum" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_data
+  </select>
+  
+</mapper>

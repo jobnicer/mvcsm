@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+  <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+  
+     <commentGenerator>  
+        <property name="suppressDate" value="true"/>  
+        <!-- 是否去除自动生成的注释 true：是 ： false:否 -->  
+        <property name="suppressAllComments" value="true"/>  
+     </commentGenerator>  
+
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                    connectionURL="jdbc:mysql://localhost:3306/test"
+                    userId="root"
+                    password="root">
+    </jdbcConnection>
+    
+    <!-- model配置，需修改targetProject（绝对路径） --> 
+    <javaModelGenerator targetPackage="org.ssm.model" targetProject="E:\workspace\code\mvcsm\src\main\java">
+    	<property name="enableSubPackages" value="true" />  
+        <property name="trimStrings" value="true" />  
+    </javaModelGenerator>
+    
+    <!-- mapper配置，需修改targetProject（绝对路径） --> 
+    <sqlMapGenerator targetPackage="org.ssm.mapper"  targetProject="E:\workspace\code\mvcsm\src\main\java">
+		<property name="enableSubPackages" value="true" /> 
+    </sqlMapGenerator>
+    
+    <!-- dao配置，需修改targetProject（绝对路径） -->
+    <javaClientGenerator targetPackage="org.ssm.dao" targetProject="E:\workspace\code\mvcsm\src\main\java" type="XMLMAPPER">
+    	<property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+   
+    <!-- 配置需要自动生成代码的数据库表名及对应的实体名，按需修改 -->
+    <!-- <table tableName="xx" domainObjectName="xx" schema="xx" catalog="xx" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" /> -->
+    <table tableName="sys_Menu" domainObjectName="Menu" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" /> 
+    
+  </context>
+</generatorConfiguration>

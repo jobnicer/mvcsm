@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.ssm.dao.UserMapper" >
+
+  <resultMap id="BaseResultMap" type="org.ssm.model.User" >
+    <id column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="RIGHTS" property="rights" jdbcType="VARCHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="INTEGER" />
+    <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="VARCHAR" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="SKIN" property="skin" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="UserAndRoleResultMap" type="org.ssm.model.User" >
+    <id column="USER_ID" property="userId" jdbcType="INTEGER" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="RIGHTS" property="rights" jdbcType="VARCHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="INTEGER" />
+    <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="VARCHAR" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="SKIN" property="skin" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <association property="role" javaType="org.ssm.model.Role">
+			<id column="ROLE_ID" property="roleId" jdbcType="INTEGER" />
+		    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+		    <result column="RIGHTS" property="rights" jdbcType="VARCHAR" />
+		    <result column="PARENT_ID" property="parentId" jdbcType="INTEGER" />
+		    <result column="ADD_QX" property="addQx" jdbcType="VARCHAR" />
+		    <result column="DEL_QX" property="delQx" jdbcType="VARCHAR" />
+		    <result column="EDIT_QX" property="editQx" jdbcType="VARCHAR" />
+		    <result column="QUERY_QX" property="queryQx" jdbcType="VARCHAR" />
+	</association>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    USER_ID, USERNAME, PASSWORD, NAME, RIGHTS, ROLE_ID, LAST_LOGIN_TIME, IP, STATUS, 
+    MEMO, SKIN, EMAIL, PHONE
+  </sql>
+  
+  <select id="selectUserAndRoleByPrimaryKey" resultMap="UserAndRoleResultMap" parameterType="java.lang.Integer" >
+    select u.USERNAME,
+           u.PASSWORD,
+    	   u.NAME,
+    	   u.SKIN,
+    	   r.ROLE_ID,
+           r.ROLE_NAME,
+           r.RIGHTS,
+           r.ADD_QX,
+           r.DEL_QX,
+           r.EDIT_QX,
+           r.QUERY_QX
+    from sys_user u
+    left join sys_role r
+    on u.ROLE_ID = r.ROLE_ID
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectUserByExample" resultMap="BaseResultMap" parameterType="org.ssm.model.User" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where 1=1
+	  <if test="username != null" >
+        and USERNAME = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="password != null" >
+        and PASSWORD = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="name != null" >
+        and NAME = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="rights != null" >
+        and RIGHTS = #{rights,jdbcType=VARCHAR}
+      </if>
+      <if test="roleId != null" >
+        and ROLE_ID = #{roleId,jdbcType=INTEGER}
+      </if>
+      <if test="lastLoginTime != null" >
+        and LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=VARCHAR}
+      </if>
+      <if test="ip != null" >
+        and IP = #{ip,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null" >
+        and STATUS = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="memo != null" >
+        and MEMO = #{memo,jdbcType=VARCHAR}
+      </if>
+      <if test="skin != null" >
+        and SKIN = #{skin,jdbcType=VARCHAR}
+      </if>
+      <if test="email != null" >
+        and EMAIL = #{email,jdbcType=VARCHAR}
+      </if>
+      <if test="phone != null" >
+        and PHONE = #{phone,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  <select id="selectUserByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteUserByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_user
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insertUser" parameterType="org.ssm.model.User" >
+    insert into sys_user (USER_ID, USERNAME, PASSWORD, 
+      NAME, RIGHTS, ROLE_ID, 
+      LAST_LOGIN_TIME, IP, STATUS, 
+      MEMO, SKIN, EMAIL, 
+      PHONE)
+    values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{rights,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER}, 
+      #{lastLoginTime,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{memo,jdbcType=VARCHAR}, #{skin,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateUserByPrimaryKey" parameterType="org.ssm.model.User" >
+    update sys_user
+    set USERNAME = #{username,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      RIGHTS = #{rights,jdbcType=VARCHAR},
+      ROLE_ID = #{roleId,jdbcType=INTEGER},
+      LAST_LOGIN_TIME = #{lastLoginTime,jdbcType=VARCHAR},
+      IP = #{ip,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      SKIN = #{skin,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR}
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectUserByNameAndPass" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where USERNAME = #{username,jdbcType=VARCHAR}
+    and PASSWORD = #{password,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

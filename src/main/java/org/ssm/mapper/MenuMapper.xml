@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.ssm.dao.MenuMapper" >
+
+  <resultMap id="BaseResultMap" type="org.ssm.model.Menu" >
+    <id column="MENU_ID" property="menuId" jdbcType="INTEGER" />
+    <result column="MENU_NAME" property="menuName" jdbcType="VARCHAR" />
+    <result column="MENU_URL" property="menuUrl" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="INTEGER" />
+    <result column="MENU_ORDER" property="menuOrder" jdbcType="INTEGER" />
+    <result column="MENU_ICON" property="menuIcon" jdbcType="VARCHAR" />
+    <result column="MENU_TYPE" property="menuType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="AllParentMenuWithSubMap" type="org.ssm.model.Menu" >
+    <id column="MENU_ID" property="menuId" jdbcType="INTEGER" />
+    <result column="MENU_NAME" property="menuName" jdbcType="VARCHAR" />
+    <result column="MENU_URL" property="menuUrl" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="INTEGER" />
+    <result column="MENU_ORDER" property="menuOrder" jdbcType="INTEGER" />
+    <result column="MENU_ICON" property="menuIcon" jdbcType="VARCHAR" />
+    <result column="MENU_TYPE" property="menuType" jdbcType="VARCHAR" />
+    <association property="parentMenu" column="PARENT_ID" javaType="org.ssm.model.Menu" select="selectMenuByPrimaryKey" />  
+    <collection property="subMenuList" column="MENU_ID" javaType="java.util.List" ofType="org.ssm.model.Menu" select="selectSubMenuByParent" />
+  </resultMap>
+  
+  <delete id="deleteMenuByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_menu
+    where MENU_ID = #{menuId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insertMenu" parameterType="org.ssm.model.Menu" >
+    insert into sys_menu (MENU_ID, MENU_NAME, MENU_URL, 
+      PARENT_ID, MENU_ORDER, MENU_ICON, 
+      MENU_TYPE)
+    values (#{menuId,jdbcType=INTEGER}, #{menuName,jdbcType=VARCHAR}, #{menuUrl,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=INTEGER}, #{menuOrder,jdbcType=INTEGER}, #{menuIcon,jdbcType=VARCHAR}, 
+      #{menuType,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateMenuByPrimaryKey" parameterType="org.ssm.model.Menu" >
+    update sys_menu
+    set MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      MENU_URL = #{menuUrl,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=INTEGER},
+      MENU_ORDER = #{menuOrder,jdbcType=INTEGER},
+      MENU_ICON = #{menuIcon,jdbcType=VARCHAR},
+      MENU_TYPE = #{menuType,jdbcType=VARCHAR}
+    where MENU_ID = #{menuId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectMenuByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select MENU_ID, MENU_NAME, MENU_URL, PARENT_ID, MENU_ORDER, MENU_ICON, MENU_TYPE
+    from sys_menu
+    where MENU_ID = #{menuId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAllParentMenu" resultMap="BaseResultMap" >
+    select MENU_ID, MENU_NAME, MENU_URL, PARENT_ID, MENU_ORDER, MENU_ICON, MENU_TYPE
+    from sys_menu
+    where PARENT_ID = 0 
+    order by MENU_ORDER
+  </select>
+  
+  <select id="selectSubMenuByParent" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select MENU_ID, MENU_NAME, MENU_URL, PARENT_ID, MENU_ORDER, MENU_ICON, MENU_TYPE
+    from sys_menu
+    where PARENT_ID = #{parentId,jdbcType=VARCHAR} 
+    order by MENU_ORDER
+  </select>
+  
+  <select id="selectAllParentMenuWithSub" resultMap="AllParentMenuWithSubMap">
+    select * from sys_menu
+    where PARENT_ID = 0
+    order by MENU_ORDER
+  </select>
+  
+</mapper>
